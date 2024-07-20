@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "category": {
+    "id": 1,
+    "categoryName": "smart phone"
+  },
+  "productName": "Xiaomi Redmi Note 8",
+  "price": 200.00
+}

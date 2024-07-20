@@ -1,0 +1,66 @@
+#%RAML 1.0
+title: rom-products-pro-api
+
+types:
+  Category: !include datatypes/category.raml
+  Product: !include datatypes/product.raml
+  Message: !include  datatypes/message.raml
+  
+/products:
+  get:
+    description: "Get all Products or Product by name"
+    displayName: "Get Products"
+    queryParameters:
+      name:
+        displayName: Product Name
+        type: string
+        description: Product name
+        required: false
+        example: "Xiaomi"
+    responses:
+      200:
+        headers:
+          content-type:
+            example: "application/json"
+        body:
+          application/json:
+            type: Product[]
+            example: !include examples/all-products.json
+
+  /{id}:
+    description: A specific Product by ID
+    uriParameters:
+     id:
+       description: A specific Product by ID
+       type: integer
+       example: 1
+    get:
+      description: "Get Product by ID"
+      displayName: "Get Product by ID"
+      responses:
+        200:
+          headers:
+            content-type:
+              example: "application/json"
+          body:
+            application/json:
+              type: Product
+              example: !include examples/product-by-id.json
+
+    
+  post:
+    description: "Create a new Product"
+    displayName: "Create Product"
+    body:
+      application/json:
+        type: Product
+        example: !include examples/newProduct.json
+    responses:
+      201:
+        headers:
+          content-type:
+            example: "application/json"
+        body:
+          application/json:
+            type: Message
+            example: {"code": 201, "message": "Producto creado exitosamente"}
