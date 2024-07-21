@@ -1,0 +1,26 @@
+api:
+  host: "0.0.0.0"
+  port: "8084"
+  path: "/api/v1/*"
+
+until:
+  successful:
+    maxretries: "3"
+    timebetween: "5000"
+    
+#rom-mysql-sys-api
+reqmysqlsys:
+  host: "localhost"
+  port: "8082"
+  path: "/api/v1/"
+  user: "romel"
+  client_id: "1371a7d77dd747f3bba037fce27ed889"
+  
+#rom-salesforce-sys-api
+reqsalesforcesys:
+  host: "localhost"
+  port: "8081"
+  path: "/api/v1/"
+  user: "romel"
+  client_id: "1371a7d77dd747f3bba037fce27ed889"
+  

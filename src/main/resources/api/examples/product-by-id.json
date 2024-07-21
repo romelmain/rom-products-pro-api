@@ -4,6 +4,7 @@
     "id": 1,
     "categoryName": "smart phone"
   },
+  "productCode": "abc",
   "productName": "Xiaomi Redmi Note 8",
   "price": 200.00
 }

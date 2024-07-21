@@ -5,6 +5,7 @@
     "id": 1,
     "categoryName": "smart phone"
   },
+  "productCode": "abc",
   "productName": "Xiaomi Redmi Note 8",
   "price": 200.00
 },
@@ -14,6 +15,7 @@
     "id": 2,
     "categoryName": "Tecnologia-Comunicaciones"
   },
+  "productCode": "abc",
   "productName": "Newest 2024 Android 13 Tablet",
   "price": 22.00
 }

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="createNewMysqlProductFlow" doc:id="7df8d41f-3f5f-4c11-afb3-e038d177352e" >
+		<logger level="INFO" doc:name="Start createNewMysqlProductFlow" doc:id="72c854bc-0565-4b5a-8315-c6c02f19d187" message="Start createNewMysqlProductFlow"/>
+		<ee:transform doc:name="Set Product" doc:id="c9d56be6-81ba-4235-959e-b2db44d265d0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="16e7f10c-7345-4ae6-b64b-74b4055a0782" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="5f36689d-4559-4576-b59b-c2ded067361e" >
+				<http:request method="POST" doc:name="Create New Mysql Product" doc:id="3af04efc-6a2b-40b6-92a9-04f316a45224" config-ref="HTTP_Request_rom-mysql-sys-api" path="products" />
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="b46305cd-b17d-4ae6-ad84-fd3ef8007801" >
+						<ee:transform doc:name="Set Error" doc:id="81f8045b-958f-4c0a-aef2-65a81075a900" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<ee:transform doc:name="Transform Message" doc:id="4f089899-3ad3-4ace-a240-aef79ec6a319" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End createNewMysqlProductFlow" doc:id="b6cd669c-a056-4a06-a526-554b5315598a" message="End createNewMysqlProductFlow"/>
+	</flow>
+</mule>

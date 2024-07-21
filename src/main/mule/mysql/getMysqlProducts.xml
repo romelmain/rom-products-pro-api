@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getMysqlProductsFlow" doc:id="fa72c104-5bed-44b0-bcf0-8d00acdddc84" >
+		<logger level="INFO" doc:name="Start getProductsFlow" doc:id="a6392bee-26f9-4539-b4bc-5c28b5e9da43" message="Start getProductsFlow"/>
+		<ee:transform doc:name="Set Name" doc:id="4f18e4ed-8fbe-42b6-a56c-1c21e06820e6" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="name" ><![CDATA[attributes.queryParams.'name']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="331018cc-c733-4b1b-9de2-b3c4c0a1cfe8" >
+			<when expression="#[vars.name != null]">
+				<flow-ref doc:name="requestGetMysqlProductsByNameFlow" doc:id="ddbc484f-37da-47e7-ac58-c1b09f5155be" name="requestGetMysqlProductsByNameFlow"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="requestGetMysqlProductsFlow" doc:id="b392684b-35cf-4f4b-9189-4e5eded12693" name="requestGetMysqlProductsFlow"/>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Set Final Response" doc:id="a37417b2-c5ab-4347-8918-2023119940ea" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End getProductsFlow" doc:id="3cdbeabc-c6d2-4280-8163-459e20ed5caf" message="End getProductsFlow"/>
+	</flow>
+	<flow name="requestGetMysqlProductsFlow" doc:id="4514ebcc-2e66-4f2b-89ca-237f6ccd57c9" >
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="0de31066-9220-4354-8fac-ae9bb49b4b8a" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="8116a9ae-f193-428c-8cdf-a1f1d3d2a4d1" >
+				<http:request method="GET" doc:name="Get Products" doc:id="af7bf3b0-9080-4225-88a2-d7aa28890f48" config-ref="HTTP_Request_rom-mysql-sys-api" path="products">
+		</http:request>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="9495c225-6a61-4320-b7d2-ae802f0afdab" >
+						<ee:transform doc:name="Set Error" doc:id="12c968ae-3573-4eba-9820-0a0f2f3af895" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+	</flow>
+	<flow name="requestGetMysqlProductsByNameFlow" doc:id="de53c8cf-1d43-4b14-aca1-d56cb62515f0" >
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="b78924a2-9441-46e6-8ce3-79c0100a8543" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="8e839293-b20a-44dd-aced-4c03ba8a932e" >
+				<http:request method="GET" doc:name="Get Products By Name" doc:id="e48092e0-f803-4695-94ed-aa1edf9df6bd" config-ref="HTTP_Request_rom-mysql-sys-api" path="products">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"name" : vars.name
+}]]]></http:query-params>
+		</http:request>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="eb5a6c2e-2e60-4084-9cf3-825aad9f0521" >
+						<ee:transform doc:name="Set Error" doc:id="ce7ad365-a612-4a77-80a4-e52dabceb8bd" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+	</flow>
+</mule>

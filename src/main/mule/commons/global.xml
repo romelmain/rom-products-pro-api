@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="19925fb7-c77a-44ba-9c82-77f92d7e8fa8" file="properties\common.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="cb517a36-2236-49d6-b30e-ecd5d5e51ba6" file="properties/${mule.env}/app.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="c48e9be6-eea8-4327-96d8-2adfcab187e0" file="properties/${mule.env}/secure.yaml" key="${prop.key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="c6cb4982-4a48-4255-86c9-52d46079c889" >
+		<http:listener-connection host="${api.host}" port="${api.port}" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_rom-mysql-sys-api" doc:name="HTTP Request configuration" doc:id="35bf76e6-2b04-4756-9905-fff8c378eeab" basePath="${reqmysqlsys.path}" >
+		<http:request-connection host="${reqmysqlsys.host}" port="${reqmysqlsys.port}" />
+	</http:request-config>
+	<http:request-config name="HTTP_Request_rom-salesforce-sys-api" doc:name="HTTP Request configuration" doc:id="23e363c6-1dd2-4e73-8bac-cc2c473a6a51" basePath="${reqsalesforcesys.path}" >
+		<http:request-connection host="${reqsalesforcesys.host}" port="${reqsalesforcesys.port}" >
+			<http:authentication >
+				<http:basic-authentication username="${reqsalesforcesys.user}" password="${secure::reqsalesforcesys.password}" />
+			</http:authentication>
+		</http:request-connection>
+		<http:default-headers >
+			<http:default-header key="client_id" value="${reqsalesforcesys.client_id}" />
+			<http:default-header key="client_secret" value="${secure::reqsalesforcesys.client_secret}" />
+		</http:default-headers>
+	</http:request-config>
+</mule>

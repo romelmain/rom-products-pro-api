@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<flow name="getProductByIdFlow" doc:id="1fdb1aed-0197-47b7-b115-6394048805d2" >
+		<logger level="INFO" doc:name="Start getProductByIdFlow" doc:id="7e2a81c9-c0b7-4b0b-b1d1-6ee6a576a884" message="Start getProductByIdFlow"/>
+		<logger level="INFO" doc:name="End getProductByIdFlow" doc:id="0ae2250b-c14e-461e-9ee1-8ecea3265a62" message="End getProductByIdFlow"/>
+	</flow>
+</mule>

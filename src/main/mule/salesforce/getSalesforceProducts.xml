@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="getSalesforceProductsFlow" doc:id="932da9f1-4264-4f44-91cc-41c8f2416ecd" >
+		<logger level="INFO" doc:name="Start getSalesforceProductsFlow" doc:id="4ac99fd4-6694-4d9e-9b95-af7db3da17a4" message="Start getSalesforceProductsFlow"/>
+		<ee:transform doc:name="Set Name" doc:id="77796b15-fecd-40de-ad59-b2155748cef7">
+			<ee:message />
+			<ee:variables>
+				<ee:set-variable variableName="name"><![CDATA[attributes.queryParams.'name']]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="5229839b-ddc6-43c8-925a-98f69e61e420" >
+			<when expression="#[vars.name != null]">
+				<flow-ref doc:name="requestGetSalesforceProductByNameFlow" doc:id="55edd8dc-9aaa-45d7-bc11-506738f11939" name="requestGetSalesforceProductByNameFlow"/>
+			</when>
+			<otherwise >
+				<flow-ref doc:name="requestGetSalesforceProductsFlow" doc:id="5877c485-ed5d-4d92-911c-2270dbbb45ef" name="requestGetSalesforceProductsFlow"/>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Set Final Response" doc:id="f98acebf-0736-40df-bf1d-0031f346efcf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End getSalesforceProductsFlow" doc:id="7a3d6431-1fd4-4adc-84c1-dd18c2ff3a95" message="End getSalesforceProductsFlow"/>
+	</flow>
+	<flow name="requestGetSalesforceProductsFlow" doc:id="0eb406aa-53cf-46b7-9bc6-b9be1e64dbf1" >
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="8db5300a-fc31-4829-a72a-b065ea3745b5" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="1ccc4fed-0531-47a3-8ad1-61c99b30ad04" >
+				<http:request method="GET" doc:name="Get Products" doc:id="57800cd6-1493-4f2d-ba07-95ff8b1cfa6c" config-ref="HTTP_Request_rom-salesforce-sys-api" path="products" />
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="99c93c39-914a-4ecf-ac61-f13a73a89557" >
+						<ee:transform doc:name="Set Error" doc:id="6ab8a4de-f8f4-493e-b4c1-1d3f61f69f81" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+	</flow>
+	<flow name="requestGetSalesforceProductByNameFlow" doc:id="ebfa5b2b-4b9d-405f-83a6-795fae9d3a94" >
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="6f5e5c54-c144-4a2d-9f98-aefc21d1c9ab" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="8d6ec498-23f8-42c0-b814-6cac675fdbb3" >
+				<http:request method="GET" doc:name="Get Products By Name" doc:id="58c8a3e4-783c-4a0c-8cd5-d5d90492e8fb" config-ref="HTTP_Request_rom-salesforce-sys-api" path="products">
+			<http:query-params><![CDATA[#[output application/java
+---
+{
+	"name" : vars.name
+}]]]></http:query-params>
+		</http:request>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3c058aa6-9b09-4c4a-9ea9-e58953bfc3f1" >
+						<ee:transform doc:name="Set Error" doc:id="099cae63-5061-4146-8282-817fa5539806" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+	</flow>
+</mule>

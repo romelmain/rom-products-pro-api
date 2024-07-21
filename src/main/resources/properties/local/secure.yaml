@@ -1,0 +1,9 @@
+#rom-mysql-sys-api
+reqmysqlsys:
+  password: "![WfZRmAxg8DY=]"
+  client_secret: "![b5TJB7/5/dsDYq0CWi4NY4rmcVPDTR40xp7Qa6DbwkRnfX4t18iKVA==]"
+  
+#rom-salesforce-sys-api
+reqsalesforcesys:
+  password: "![WfZRmAxg8DY=]"
+  client_secret: "![b5TJB7/5/dsDYq0CWi4NY4rmcVPDTR40xp7Qa6DbwkRnfX4t18iKVA==]"
