@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="createNewProductFlow" doc:id="1ba61ab8-b017-44f0-bfe8-03ede852fac7" >
+		<logger level="INFO" doc:name="Start createNewProductFlow" doc:id="716b580f-41f3-4adb-86bb-51c1544019d3" message="Start createNewProductFlow"/>
+		<ee:transform doc:name="Set Product" doc:id="e3a5b1c8-c759-469d-b64b-eeb93d921ffa" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="name" ><![CDATA[payload.productName]]></ee:set-variable>
+				<ee:set-variable variableName="product" ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="getMysqlProductsFlow" doc:id="994bc8f8-5cbd-4fcd-9a85-f238f021a8fd" name="getMysqlProductsFlow"/>
+		<choice doc:name="Choice" doc:id="2eaf4ecf-707c-4863-84a0-763992d86cb5" >
+			<when expression="#[sizeOf(vars.mysqlResponse) == 0]">
+				<flow-ref doc:name="createNewMysqlProductFlow" doc:id="c86c4bfa-edfa-4967-bedf-14b7fbaf6f9e" name="createNewMysqlProductFlow"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="c38a8284-8f4c-4216-8420-e66e9ed5ffd1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "hay producto en Mysql"
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<flow-ref doc:name="getSalesforceProductsFlow" doc:id="838f6bb1-406c-4f72-b09a-3fca5539a924" name="getSalesforceProductsFlow"/>
+		<choice doc:name="Choice" doc:id="10dd1ce4-9fdb-46f2-8448-2b80b41eb311" >
+			<when expression="#[sizeOf(vars.salesforceResponse) == 0]">
+				<flow-ref doc:name="createNewSalesforceProductFlow" doc:id="f49a958a-0b9e-44a5-a9f6-8cbfa42c990b" name="createNewSalesforceProductFlow"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="172cf10f-7963-4a54-a0a5-2c738c0cb953" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message": "hay producto en Salesforce"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="End createNewProductFlow" doc:id="1b198385-4b95-49a6-bead-34990ed884ee" message="End createNewProductFlow"/>
+	</flow>
+</mule>

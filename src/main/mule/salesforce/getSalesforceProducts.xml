@@ -7,12 +7,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="getSalesforceProductsFlow" doc:id="932da9f1-4264-4f44-91cc-41c8f2416ecd" >
 		<logger level="INFO" doc:name="Start getSalesforceProductsFlow" doc:id="4ac99fd4-6694-4d9e-9b95-af7db3da17a4" message="Start getSalesforceProductsFlow"/>
-		<ee:transform doc:name="Set Name" doc:id="77796b15-fecd-40de-ad59-b2155748cef7">
-			<ee:message />
-			<ee:variables>
-				<ee:set-variable variableName="name"><![CDATA[attributes.queryParams.'name']]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
 		<choice doc:name="Choice" doc:id="5229839b-ddc6-43c8-925a-98f69e61e420" >
 			<when expression="#[vars.name != null]">
 				<flow-ref doc:name="requestGetSalesforceProductByNameFlow" doc:id="55edd8dc-9aaa-45d7-bc11-506738f11939" name="requestGetSalesforceProductByNameFlow"/>
@@ -23,11 +17,13 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</choice>
 		<ee:transform doc:name="Set Final Response" doc:id="f98acebf-0736-40df-bf1d-0031f346efcf" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="salesforceResponse" ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
-			</ee:message>
+payload]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="End getSalesforceProductsFlow" doc:id="7a3d6431-1fd4-4adc-84c1-dd18c2ff3a95" message="End getSalesforceProductsFlow"/>
 	</flow>

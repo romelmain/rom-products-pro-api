@@ -105,6 +105,6 @@ output application/json
 		<flow-ref doc:name="getProductByIdFlow" doc:id="6e8a2c5f-f12c-40d6-9cd5-56a1ae0437f7" name="getProductByIdFlow"/>
     </flow>
     <flow name="post:\products:application\json:rom-products-pro-api-config">
-		<flow-ref doc:name="createNewMysqlProductFlow" doc:id="d6f02225-9893-46b4-9ccf-41633ef48e03" name="createNewSalesforceProductFlow"/>
+		<flow-ref doc:name="createNewProductFlow" doc:id="d6f02225-9893-46b4-9ccf-41633ef48e03" name="createNewProductFlow"/>
     </flow>
 </mule>

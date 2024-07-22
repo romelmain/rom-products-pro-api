@@ -7,13 +7,6 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="getMysqlProductsFlow" doc:id="fa72c104-5bed-44b0-bcf0-8d00acdddc84" >
 		<logger level="INFO" doc:name="Start getProductsFlow" doc:id="a6392bee-26f9-4539-b4bc-5c28b5e9da43" message="Start getProductsFlow"/>
-		<ee:transform doc:name="Set Name" doc:id="4f18e4ed-8fbe-42b6-a56c-1c21e06820e6" >
-			<ee:message >
-			</ee:message>
-			<ee:variables >
-				<ee:set-variable variableName="name" ><![CDATA[attributes.queryParams.'name']]></ee:set-variable>
-			</ee:variables>
-		</ee:transform>
 		<choice doc:name="Choice" doc:id="331018cc-c733-4b1b-9de2-b3c4c0a1cfe8" >
 			<when expression="#[vars.name != null]">
 				<flow-ref doc:name="requestGetMysqlProductsByNameFlow" doc:id="ddbc484f-37da-47e7-ac58-c1b09f5155be" name="requestGetMysqlProductsByNameFlow"/>
@@ -24,11 +17,13 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		</choice>
 		<ee:transform doc:name="Set Final Response" doc:id="a37417b2-c5ab-4347-8918-2023119940ea" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="mysqlResponse" ><![CDATA[%dw 2.0
 output application/json
 ---
-payload]]></ee:set-payload>
-			</ee:message>
+payload]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
 		<logger level="INFO" doc:name="End getProductsFlow" doc:id="3cdbeabc-c6d2-4280-8163-459e20ed5caf" message="End getProductsFlow"/>
 	</flow>

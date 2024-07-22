@@ -9,20 +9,24 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<logger level="INFO" doc:name="Start createNewSalesforceProductFlow" doc:id="29c74976-100a-41da-84a6-0b08f8d5e4c0" message="Start createNewSalesforceProductFlow"/>
 		<ee:transform doc:name="Set Product" doc:id="768642c3-73ad-4410-b3b1-c7f7ae2af17a" >
 			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="salesforceProduct" ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-	"productName": payload.productName,
-	"category": payload.category.categoryName as String,
-	"productCode": payload.productCode,
-	"price": payload.price default 20
-}]]></ee:set-payload>
-			</ee:message>
+	"productName": vars.product.productName,
+	"category": vars.product.category.categoryName as String,
+	"productCode": vars.product.productCode,
+	"price": vars.product.price default 20
+}]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
 		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="469fe87a-31b4-4303-bacf-d11ed913a2a8" millisBetweenRetries="${until.successful.timebetween}">
 			<try doc:name="Try" doc:id="a420e0c8-e9d3-4107-a554-8cb3c7439eda" >
-				<http:request method="POST" doc:name="Create New Salesforce Product" doc:id="8655b108-56b3-45b5-b182-36cf8302f0fe" config-ref="HTTP_Request_rom-salesforce-sys-api" path="products" />
+				<http:request method="POST" doc:name="Create New Salesforce Product" doc:id="8655b108-56b3-45b5-b182-36cf8302f0fe" config-ref="HTTP_Request_rom-salesforce-sys-api" path="products" >
+					<http:body ><![CDATA[#[vars.salesforceProduct]]]></http:body>
+				</http:request>
 				<error-handler >
 					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="17263ebf-6d02-4342-849d-13374b0fdfd9" >
 						<ee:transform doc:name="Set Error" doc:id="79babbce-e81d-4c32-afff-ade953339890" >
